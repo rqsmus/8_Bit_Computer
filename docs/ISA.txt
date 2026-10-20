@@ -1,0 +1,343 @@
+Instruction Set Architecture For My 8 bit pc
+By Rasmus Koch Jensen
+
+
+| Opcode | Instruction | Lower 4 bits         |
+| ------ | ----------- | -------------------- |
+| `0000` | LOAD        | destination register |	Data movement
+| `0001` | STORE       | source register      |
+| `0010` | ADD         | options              |	Arithmetic
+| `0011` | SUB         | options              |
+| `0100` | AND         | options              | Logic
+| `0101` | OR          | options              |
+| `0110` | XOR         | options              |
+| `0111` | NOT         | options              |
+| `1000` | SHL         | options              | Bit manipulation
+| `1001` | SHR         | options              |
+| `1010` | JMP         | unused               | Control flow
+| `1011` | JZ          | register/condition   |
+| `1100` | JNZ         | register/condition   |
+| `1101` | OUT         | register             | Input/output
+| `1110` | IN          | destination register |
+| `1111` | HALT        | unused               | Halt
+
+
+Two-byte instructions:
+LOAD A/B, address
+STORE A/B, address
+JMP address
+JZ address
+JNZ address
+
+One-byte instructions:
+ADD
+SUB
+AND
+OR
+XOR
+NOT
+SHL
+SHR
+OUT A/B
+IN A/B
+HALT
+
+
+LOAD:
+
+bit 7-4
+Opcode = 0000
+
+bit 3-0
+destination register:
+0000 = LOAD A
+0001 = LOAD B
+0010 - 1111: Reserved
+
+1 byte		2 byte
+LOAD X	 	address
+
+X <- RAM[address]
+
+
+STORE:
+
+bit 7-4
+Opcode = 0001
+
+bit 3-0
+Source register:
+0000 = STORE A
+0001 = STORE B
+0010 - 1111: Reserved
+
+1 byte		2 byte
+STORE X	 	address
+
+RAM[address] <- X
+
+ADD:
+
+bit 7-4
+Opcode = 0010
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+ADD
+
+A <- A + B
+
+
+SUB:
+
+bit 7-4
+Opcode = 0011
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+SUB
+
+A <- A - B
+
+
+AND:
+
+bit 7-4
+Opcode = 0100
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+AND
+
+A <- A AND B
+
+
+OR:
+
+bit 7-4
+Opcode = 0101
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+OR
+
+A <- A OR B
+
+
+XOR:
+
+bit 7-4
+Opcode = 0110
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+XOR
+
+A <- A XOR B
+
+
+
+NOT:
+
+bit 7-4
+Opcode = 0111
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+NOT
+
+A <- NOT A
+
+
+
+SHL:
+
+bit 7-4
+Opcode = 1000
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+SHL
+
+A <- A << 1
+
+SHR:
+
+bit 7-4
+Opcode = 1001
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte
+SHR
+
+A <- A >> 1
+
+
+
+JMP:
+
+bit 7-4
+Opcode = 1010
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte		2 byte
+JMP		address
+
+PC <- address
+
+
+JZ:
+
+bit 7-4
+Opcode = 1011
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte		2 byte
+JZ		address
+
+if A = 0;
+	PC <- address
+
+
+
+JNZ:
+
+bit 7-4
+Opcode = 1100
+
+bit 3-0
+0000
+0001 - 1111: Reserved
+
+1 byte		2 byte
+JNZ		address
+
+if A != 0;
+	PC <- address
+
+
+
+OUT:
+
+bit 7-4
+Opcode = 1101
+
+bit 3-0
+A = 0000
+B = 0001
+0010 - 1111: Reserved
+
+1 byte
+OUT X
+
+OUT <- X
+
+
+
+
+IN:
+
+bit 7-4
+Opcode = 1110
+
+bit 3-0
+A = 0000
+B = 0001
+0010 - 1111: Reserved
+
+1 byte
+IN X
+
+X <- IN
+
+
+
+HALT:
+
+bit 7-4
+Opcode = 1111
+
+HALT the program
+
+
+
+
+ALU flags updates
+
+ZERO:
+1 when result = 00000000
+
+NEGATIVE:
+1 when result bit 7 = 1
+
+CARRY:
+Carry output from the ALU
+
+
+
+ADD   -> updates flags
+SUB   -> updates flags
+AND   -> updates flags
+OR    -> updates flags
+XOR   -> updates flags
+NOT   -> updates flags
+SHL   -> updates flags
+SHR   -> updates flags
+
+FLAGS register:
+
+bit 2 = ZERO
+bit 1 = NEGATIVE
+bit 0 = CARRY
+
+
+
+
+Example of program:
+
+LOAD A, address
+
+Cycle 1: Fetch instruction
+Cycle 2: Increment PC
+Cycle 3: Fetch address
+Cycle 4: Increment PC
+Cycle 5: Read RAM
+Cycle 6: Store into A
+
+
+T0: IR <- ROM[PC]
+T1: PC <- PC + 1
+T2: Address Register <- ROM[PC]
+T3: PC <- PC + 1
+T4: MDR <- RAM[Address Register]
+T5: A <- MDR
