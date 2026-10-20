@@ -31,8 +31,10 @@ The design has been tested in simulation and serves as a baseline for further de
 
 ## Repository Structure
 
-- `src/` — VHDL source files for the CPU and its components
-- `docs/` — Instruction set and opcode definitions
+- `src/` — VHDL source files for the CPU and its components.
+- `docs/` — Instruction set definitions and documentation explaining the source files.
+
+For more details about the individual components, see [Source Files](docs/source-files.md).
 
 ## Potential Future Work
 
